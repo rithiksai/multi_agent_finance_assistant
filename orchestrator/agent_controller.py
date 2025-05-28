@@ -17,9 +17,18 @@ async def process_query(query: str) -> str:
         stock_data = stock_resp.json()
         print(stock_data)
 
-        # Step 2: Use LLM to generate a summary
+        # Step 2: Use Scraper to get fillings and data
+        SCRAPING_AGENT_URL = os.getenv("SCRAPING_AGENT_URL", "http://localhost:8004") + "/scrape"
 
-        # Example hardcoded LLM fields
+        # Inside your process_query function
+        scrape_resp = await client.post(SCRAPING_AGENT_URL, json={"ticker": ticker})
+        scraped_data = scrape_resp.json()
+
+        
+
+        # Step 3: Use LLM to generate a summary
+
+        """
         llm_payload = {
             "exposure": "Apple has moderate exposure to global markets with high brand recognition.",
             "earnings": "Q2 earnings showed a 7% YoY increase with strong iPhone sales.",
@@ -27,7 +36,10 @@ async def process_query(query: str) -> str:
         }
 
         # Send to LLM agent
-        llm_resp = await client.post(LLM_AGENT_URL, json=llm_payload)
+        llm_resp = await client.post(LLM_AGENT_URL, json=llm_payload)"""
+
+        # Now pass scraped_data to LLM agent
+        llm_resp = await client.post(LLM_AGENT_URL, json=scraped_data)
         summary = llm_resp.json()["brief"]
         #print(summary)
         
