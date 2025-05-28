@@ -1,0 +1,21 @@
+# .gitignore
+
+# Python junk
+__pycache__/
+*.py[cod]
+*.log
+
+# Virtual environment
+venv/
+
+# Env files
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Ignore audio uploads
+*.wav
+*.mp3
+*.m4a
