@@ -15,4 +15,5 @@ class BriefRequest(BaseModel):
 @app.post("/generate_brief")
 def get_market_brief(data: BriefRequest):
     result = generate_brief(data.exposure, data.earnings, data.sentiment)
+    #print(result)
     return {"brief": result}
