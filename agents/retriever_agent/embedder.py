@@ -5,6 +5,8 @@ from pinecone import Pinecone, ServerlessSpec
 from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv
 import time
+from .chunker import chunk_text
+
 
 # Load root .env
 from pathlib import Path
@@ -50,24 +52,25 @@ except Exception as e:
     raise
 
 def store_embedding(doc_id: str, text: str):
-    """Store text embedding in Pinecone"""
+    """Store text embedding in Pinecone, split into chunks"""
     try:
-        # Generate embedding
-        embedding = embedder_model.encode(text).tolist()
-        
-        # Upsert to Pinecone with new format
-        index.upsert(
-            vectors=[
-                {
-                    "id": doc_id,
-                    "values": embedding,
-                    "metadata": {"text": text}
-                }
-            ]
-        )
-        
-        return {"status": "success", "id": doc_id}
-    
+        # Split into chunks
+        chunks = chunk_text(text)
+
+        vectors = []
+        for i, chunk in enumerate(chunks):
+            embedding = embedder_model.encode(chunk).tolist()
+            vectors.append({
+                "id": f"{doc_id}_{i}",
+                "values": embedding,
+                "metadata": {"text": chunk}
+            })
+
+        # Upsert all chunks to Pinecone
+        index.upsert(vectors=vectors)
+
+        return {"status": "success", "chunks_stored": len(chunks)}
+
     except Exception as e:
         return {"status": "error", "message": str(e)}
     
@@ -87,11 +90,14 @@ def query_embedding(query_text: str, top_k: int = 5):
         # Format results
         matches = []
         for match in results['matches']:
+            doc_id = match['id'].split('_')[0]  # remove chunk suffix
             matches.append({
-                "id": match['id'],
+                "doc_id": doc_id,
+                "chunk_id": match['id'],
                 "score": match['score'],
                 "text": match['metadata'].get('text', '')
             })
+
         
         return {"status": "success", "matches": matches}
     
