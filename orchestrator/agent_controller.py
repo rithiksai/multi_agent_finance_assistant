@@ -8,7 +8,6 @@ from typing import Dict, Optional, Tuple
 API_AGENT_URL = os.getenv("API_AGENT_URL", "http://localhost:8001")
 LLM_AGENT_URL = os.getenv("LLM_AGENT_URL", "http://localhost:8003")
 RETRIEVER_AGENT_URL = os.getenv("RETRIEVER_AGENT_URL", "http://localhost:8004")
-#SCRAPING_AGENT_URL = os.getenv("SCRAPING_AGENT_URL", "http://localhost:8005")
 SCRAPING_AGENT_URL = "http://localhost:8005"
 
 async def extract_ticker_using_llm(query: str) -> Optional[str]:
