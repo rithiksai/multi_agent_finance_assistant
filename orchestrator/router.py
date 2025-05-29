@@ -1,7 +1,7 @@
 # router.py
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from orchestrator.agent_controller import process_query
+from agent_controller import process_query
 
 router = APIRouter()
 
