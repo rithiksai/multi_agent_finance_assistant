@@ -2,7 +2,7 @@
 
 A comprehensive multi-agent AI system that transforms voice queries into intelligent financial insights through advanced orchestration, real-time data processing, and intelligent retrieval mechanisms.
 
-![Architecture Overview](docs/architecture_diagram.png)
+![Architecture Overview](docs/architecture.jpg)
 
 ## 🚀 Overview
 
