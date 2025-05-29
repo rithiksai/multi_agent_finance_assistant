@@ -17,4 +17,4 @@
 - introduced by the Company often utilize custom components available from only one source. When a component or product uses new technologies, initial capacity constraints may exist until the suppliers’ yields have matured or their manufacturing capacities have increased.
 - introduced into specialized applications, including health. In addition, the Company’s service offerings can have quality issues and from time to time experience outages, service slowdowns or errors.
 
-*Extracted on: 2025-05-29T11:43:05.368538*
+*Extracted on: 2025-05-29T12:09:55.021123*
