@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from langchain.prompts import PromptTemplate
 from langchain_core.runnables import RunnableSequence
 from langchain_openai import ChatOpenAI
+from langchain_core.prompts import PromptTemplate as LangPromptTemplate 
 from pathlib import Path
 
 # Load API key
@@ -17,27 +18,55 @@ api_key = os.getenv("OPENAI_API_KEY")
 llm = ChatOpenAI(api_key=api_key, temperature=0.5)
 
 # Step 2: Prompt template
-template = """
-You are a financial assistant generating a morning market briefing.
+comprehensive_prompt = PromptTemplate.from_template("""
+    You are a financial assistant generating a market briefing based on various data sources.
 
-Here is the data:
-- Asia tech exposure: {exposure}%
-- Earnings surprises: {earnings}
-- Market sentiment: {sentiment}
+    Use the following information to answer the user's query:
 
-Write a short 2-sentence market brief using this info.
-"""
+    Query: {query}
+    Company Ticker: {ticker}
+    Stock Data: {stock_data}
+    Filing Summary: {filing_summary}
+    Filing Type: {filing_type}
+    Data Source: {data_source}
 
-prompt = PromptTemplate.from_template(template)
+    Now write a concise, 2-3 sentence answer that combines this information to give the user an update.
+    """)
 
-# Step 3: Chain = prompt | LLM (this is the new pattern)
-chain = prompt | llm  # This is a RunnableSequence
+contextual_chain = comprehensive_prompt | llm
 
 # Step 4: Final function
-def generate_brief(exposure: str, earnings: str, sentiment: str) -> str:
-    result = chain.invoke({
-        "exposure": exposure,
-        "earnings": earnings,
-        "sentiment": sentiment
-    })
-    return result.content
+def generate_contextual_brief(data) -> str:
+    try:
+        response = contextual_chain.invoke({
+            "query": data.query,
+            "ticker": data.ticker,
+            "stock_data": str(data.stock_data),  # Convert dict to string
+            "filing_summary": data.filing_summary,
+            "filing_type": data.filing_type,
+            "data_source": data.data_source
+        })
+        return response.content
+    except Exception as e:
+        return f"⚠️ Failed to generate LLM response: {str(e)}"
+
+
+extraction_prompt = LangPromptTemplate.from_template("""
+Extract the stock ticker symbol from this query: "{query}"
+
+Rules:
+- Return ONLY the ticker symbol (e.g., AAPL, MSFT, GOOGL)
+- If a company name is mentioned, return its ticker symbol
+- Common mappings: Apple->AAPL, Microsoft->MSFT, Google/Alphabet->GOOGL, Amazon->AMZN, Tesla->TSLA, Meta/Facebook->META, Nvidia->NVDA
+- If no company or ticker is found, return "NONE"
+- Return only the ticker, no other text
+
+Query: {query}
+Ticker:
+""")
+
+extraction_chain = extraction_prompt | llm
+
+def extract_ticker(query: str) -> str:
+    result = extraction_chain.invoke({"query": query})
+    return result.content.strip()
