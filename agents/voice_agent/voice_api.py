@@ -33,7 +33,7 @@ async def transcribe(file: UploadFile = File(...)):
     text = transcribe_audio(audio_path)
     # Step 2: Send text to orchestrator
     async with httpx.AsyncClient(timeout=90.0) as client:
-        response = await client.post(ORCHESTRATOR_URL, json={"query": text})
+        response = await client.post(f"{ORCHESTRATOR_URL}/ask", json={"query": text})
         print("Raw response:", response.status_code, response.text)
 
         reply = response.json()["response"]
