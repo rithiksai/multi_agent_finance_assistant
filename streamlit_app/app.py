@@ -18,7 +18,7 @@ env_path = Path(__file__).resolve().parents[1] / ".env"
 load_dotenv(dotenv_path=env_path)
 
 # Point to your local voice agent
-VOICE_AGENT_URL= os.getenv("VOICE_AGENT_URL")
+VOICE_AGENT_URL = os.getenv("VOICE_AGENT_URL")
 
 def synthesize_and_play(text: str):
     tts = gTTS(text=text, lang='en')
@@ -31,6 +31,21 @@ def synthesize_and_play(text: str):
     
     # Optional: clean up the file
     os.remove("response.mp3")
+
+# Create HTTP client with CORS-friendly headers
+def create_http_client():
+    """Create HTTP client with proper headers for CORS"""
+    headers = {
+        "Accept": "application/json",
+        "User-Agent": "StreamlitApp/1.0",
+        # Don't set Content-Type for file uploads - httpx handles this
+    }
+    
+    return httpx.Client(
+        headers=headers,
+        timeout=90.0,
+        follow_redirects=True
+    )
 
 st.set_page_config(page_title="Stock Insights", layout="centered")
 st.title("📈Stock Insight Assistant")
@@ -51,9 +66,11 @@ if audio_file is not None:
     # Show spinner while processing
     with st.spinner('🎯 Analyzing your query... Please wait while we work our magic!'):
         try:
-            with open(audio_save_path, "rb") as f:
-                files = {"file": f}
-                transcription = httpx.post(VOICE_AGENT_URL, files=files, timeout=90.0)
+            # Use the CORS-friendly HTTP client
+            with create_http_client() as client:
+                with open(audio_save_path, "rb") as f:
+                    files = {"file": f}
+                    transcription = client.post(VOICE_AGENT_URL, files=files)
             
             if transcription.status_code == 200:
                 data = transcription.json()
@@ -69,5 +86,7 @@ if audio_file is not None:
                 synthesize_and_play(reply)
             else:
                 st.error(f"❌ Voice Agent Error: {transcription.status_code} - {transcription.text}")
+        except httpx.RequestError as e:
+            st.error(f"❌ Network Error (possibly CORS): {e}")
         except Exception as e:
             st.error(f"❌ Failed to call voice agent: {e}")

@@ -3,8 +3,17 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from llm_logic import generate_contextual_brief,extract_ticker
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Language Agent", description="LLM-powered narrative generator")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure properly for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class TickerRequest(BaseModel):
     query: str

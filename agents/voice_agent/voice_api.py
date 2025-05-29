@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import httpx
 from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 from stt import transcribe_audio    #because it's in the same file we are using .stt
 from dotenv import load_dotenv
 
@@ -14,6 +15,14 @@ load_dotenv(dotenv_path=env_path)
 ORCHESTRATOR_URL = os.getenv("ORCHESTRATOR_URL", "http://localhost:8000/ask")
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure properly for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/transcribe")
 async def transcribe(file: UploadFile = File(...)):

@@ -1,10 +1,19 @@
 # agents/retriever_agent/retriever_service.py
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from embedder import store_embedding,query_embedding
 
 app = FastAPI(title="Retriever Agent", description="Stores scraped documents as embeddings in Pinecone")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure properly for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class StoreRequest(BaseModel):
     doc_id: str
