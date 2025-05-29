@@ -70,7 +70,8 @@ if audio_file is not None:
             with create_http_client() as client:
                 with open(audio_save_path, "rb") as f:
                     files = {"file": f}
-                    transcription = client.post(VOICE_AGENT_URL, files=files)
+                    # FIX: Add /transcribe endpoint to the URL
+                    transcription = client.post(f"{VOICE_AGENT_URL}/transcribe", files=files)
             
             if transcription.status_code == 200:
                 data = transcription.json()
