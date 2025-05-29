@@ -1,4 +1,4 @@
-# agents/scraping_agent/sec_scraper.py
+# agents/scraping_agent/scraper.py
 
 from sec_edgar_downloader import Downloader
 from pathlib import Path
