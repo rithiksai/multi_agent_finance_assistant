@@ -3,7 +3,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Dict, Optional
-from .scraper import SECScrapingAgent
+from scraper import SECScrapingAgent
 
 app = FastAPI(title="Scraping Agent", description="Downloads and processes SEC filings")
 

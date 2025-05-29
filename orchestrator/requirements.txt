@@ -1,0 +1,16 @@
+# Orchestrator - Minimal Requirements
+fastapi==0.115.12
+uvicorn==0.34.2
+httpx==0.28.1
+python-dotenv==1.1.0
+python-multipart==0.0.20
+
+# LangChain for orchestration
+langchain==0.3.25
+langchain-core==0.3.62
+langchain-openai==0.3.18
+
+# Core dependencies
+numpy==2.2.6
+requests==2.32.3
+pydantic==2.11.5

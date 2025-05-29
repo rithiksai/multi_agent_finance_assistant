@@ -1,0 +1,24 @@
+# Core FastAPI and server
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# HTTP client
+httpx==0.25.2
+
+# Environment variables
+python-dotenv==1.0.0
+
+# Audio processing and transcription
+openai-whisper @ git+https://github.com/openai/whisper.git@dd985ac4b90cafeef8712f2998d62c59c3e62d22
+torch==2.1.1
+torchaudio==2.1.1
+
+# File handling (already included with Python but explicit for clarity)
+pathlib2==2.3.7.post1
+
+# Additional dependencies that Whisper might need
+numpy==1.24.3
+ffmpeg-python==0.2.0
+
+# For multipart file uploads (FastAPI dependency)
+python-multipart==0.0.6

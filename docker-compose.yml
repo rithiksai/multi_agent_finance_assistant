@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  orchestrator:
+    build:
+      context: ./orchestrator
+    ports:
+      - "8000:8000"
+    depends_on:
+      - llm_agent
+      - retriever_agent
+      - scraping_agent
+      - api_agent
+    environment:
+      - LLM_AGENT_URL=http://llm_agent:8000
+      - RETRIEVER_AGENT_URL=http://retriever_agent:8000
+      - SCRAPING_AGENT_URL=http://scraping_agent:8000
+      - API_AGENT_URL=http://api_agent:8000
+
+  voice_agent:
+    build:
+      context: ./agents/voice_agent
+    ports:
+      - "8002:8000"
+    environment:
+      - ORCHESTRATOR_URL=http://orchestrator:8000/ask
+
+  llm_agent:
+    build:
+      context: ./agents/llm_agent
+    ports:
+      - "8003:8000"
+
+  retriever_agent:
+    build:
+      context: ./agents/retriever_agent
+    ports:
+      - "8004:8000"
+
+  scraping_agent:
+    build:
+      context: ./agents/scraping_agent
+    ports:
+      - "8005:8000"
+
+  api_agent:
+    build:
+      context: ./agents/api_agent
+    ports:
+      - "8006:8000"

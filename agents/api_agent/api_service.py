@@ -2,7 +2,7 @@
 
 from pydantic import BaseModel
 from fastapi import FastAPI, Query
-from .api_fetcher import get_stock_info
+from api_fetcher import get_stock_info
 
 app = FastAPI(title="API Agent", description="Fetches real-time stock data using yfinance")
 

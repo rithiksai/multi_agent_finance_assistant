@@ -1,0 +1,18 @@
+# Retrieval Agent - Minimal Requirements
+fastapi==0.115.12
+uvicorn==0.34.2
+httpx==0.28.1
+python-dotenv==1.1.0
+
+# Vector database
+pinecone==7.0.1
+pinecone-plugin-interface==0.0.7
+
+# Embeddings and transformers
+sentence-transformers==4.1.0
+transformers==4.52.3
+torch==2.7.0
+
+# Core dependencies
+numpy==2.2.6
+requests==2.32.3

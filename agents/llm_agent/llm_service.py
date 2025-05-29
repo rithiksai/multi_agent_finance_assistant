@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 from pydantic import BaseModel
-from .llm_logic import generate_contextual_brief,extract_ticker
+from llm_logic import generate_contextual_brief,extract_ticker
 
 app = FastAPI(title="Language Agent", description="LLM-powered narrative generator")
 

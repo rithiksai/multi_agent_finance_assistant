@@ -5,15 +5,20 @@ import os
 from gtts import gTTS
 import base64
 import time
+from dotenv import load_dotenv
+from pathlib import Path
 
 from streamlit_webrtc import webrtc_streamer
 
 AUDIO_SAVE_PATH = "audio_responses"
 os.makedirs(AUDIO_SAVE_PATH, exist_ok=True)
 
+# Load environment variables
+env_path = Path(__file__).resolve().parents[1] / ".env"
+load_dotenv(dotenv_path=env_path)
+
 # Point to your local voice agent
-ORCHESTRATOR_URL = "http://localhost:8000/ask"
-VOICE_AGENT_URL= "http://localhost:8002/transcribe"
+VOICE_AGENT_URL= os.getenv("VOICE_AGENT_URL")
 
 def synthesize_and_play(text: str):
     tts = gTTS(text=text, lang='en')

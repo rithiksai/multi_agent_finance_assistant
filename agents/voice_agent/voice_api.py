@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import httpx
 from fastapi import FastAPI, UploadFile, File
-from .stt import transcribe_audio    #because it's in the same file we are using .stt
+from stt import transcribe_audio    #because it's in the same file we are using .stt
 from dotenv import load_dotenv
 
 env_path = Path(__file__).resolve().parents[2] / ".env"

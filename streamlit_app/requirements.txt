@@ -1,0 +1,13 @@
+# Streamlit App - Minimal Requirements
+streamlit==1.45.1
+streamlit-webrtc==0.62.4
+httpx==0.28.1
+python-dotenv==1.1.0
+
+# Audio processing for TTS
+gTTS==2.5.4
+
+# Core dependencies
+numpy==2.2.6
+requests==2.32.3
+pandas==2.2.3

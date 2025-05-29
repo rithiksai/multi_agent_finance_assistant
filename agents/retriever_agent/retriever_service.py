@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from .embedder import store_embedding,query_embedding
+from embedder import store_embedding,query_embedding
 
 app = FastAPI(title="Retriever Agent", description="Stores scraped documents as embeddings in Pinecone")
 
